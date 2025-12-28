@@ -1,0 +1,24 @@
+# Yennefer Configuration - Windows with Local LM Studio
+
+# Voice Input Settings
+voice_input:
+  engine: text              # text input - use Win+H for voice typing
+
+# Voice Output Settings (ElevenLabs)
+voice_output:
+  voice_id: YOUR_VOICE_ID_HERE      # Your ElevenLabs voice ID
+  model: eleven_monolingual_v1
+  api_key: YOUR_API_KEY_HERE        # Your ElevenLabs API key
+
+# LLM Backend Settings
+llm:
+  backend: lmstudio
+  api_base: "http://localhost:1234/v1"   # Local LM Studio
+  model: auto
+  max_tokens: 2048
+  temperature: 0.7
+  context_limit: 32000                    # Adjust based on your model
+
+# Logging
+logging:
+  level: INFO
