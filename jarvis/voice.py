@@ -63,10 +63,10 @@ class Voice:
         self.api_key = self.config.get('api_key') or os.environ.get('ELEVENLABS_API_KEY')
         
         # Voice tuning parameters
-        self.stability = self.config.get('stability', 0.5)  # 0-1, higher = more consistent
-        self.similarity_boost = self.config.get('similarity_boost', 0.75)  # 0-1, voice matching
-        self.style = self.config.get('style', 0.0)  # 0-1, style exaggeration
-        self.speed = self.config.get('speed', 1.0)  # 0.25-4.0, speech rate
+        self.stability = self.config.get('stability', 0.5)
+        self.similarity_boost = self.config.get('similarity_boost', 0.75)
+        self.style = self.config.get('style', 0.0)
+        self.speed = self.config.get('speed', 1.0)  # Stored but may not be supported
         self.use_speaker_boost = self.config.get('use_speaker_boost', True)
         
         # macOS settings
@@ -136,11 +136,25 @@ class Voice:
         """Fetch ElevenLabs subscription/usage info."""
         try:
             loop = asyncio.get_event_loop()
-            self.subscription_info = await loop.run_in_executor(
-                None,
-                lambda: self.client.user.get_subscription()
-            )
-            self._print_credits_status()
+            # Try different API methods based on SDK version
+            try:
+                # Newer SDK versions
+                self.subscription_info = await loop.run_in_executor(
+                    None,
+                    lambda: self.client.user.get()
+                )
+            except AttributeError:
+                try:
+                    # Alternative method
+                    self.subscription_info = await loop.run_in_executor(
+                        None,
+                        lambda: self.client.users.get()
+                    )
+                except:
+                    pass
+            
+            if self.subscription_info:
+                self._print_credits_status()
         except Exception as e:
             console.print(f"[yellow]Could not fetch subscription info: {e}[/yellow]")
     
@@ -150,8 +164,18 @@ class Voice:
             return
         
         info = self.subscription_info
-        used = info.character_count
-        limit = info.character_limit
+        
+        # Handle different SDK response structures
+        if hasattr(info, 'subscription'):
+            sub = info.subscription
+            used = getattr(sub, 'character_count', 0)
+            limit = getattr(sub, 'character_limit', 10000)
+            tier = getattr(sub, 'tier', 'unknown')
+        else:
+            used = getattr(info, 'character_count', 0)
+            limit = getattr(info, 'character_limit', 10000)
+            tier = getattr(info, 'tier', 'unknown')
+        
         remaining = limit - used
         percent_used = (used / limit) * 100 if limit > 0 else 0
         
@@ -167,8 +191,6 @@ class Voice:
             color = "yellow"
         else:
             color = "red"
-        
-        tier = info.tier or "unknown"
         
         console.print(
             f"[dim]ElevenLabs:[/dim] [{color}]{bar}[/{color}] "
@@ -222,17 +244,13 @@ class Voice:
             
             loop = asyncio.get_event_loop()
             
-            # Build kwargs - speed only supported on some models
+            # Core parameters that are always supported
             kwargs = {
                 'text': text,
                 'voice_id': self.voice_id,
                 'model_id': self.model,
                 'voice_settings': voice_settings
             }
-            
-            # Add speed if not default (some models/tiers may not support it)
-            if self.speed != 1.0:
-                kwargs['speed'] = self.speed
             
             audio_generator = await loop.run_in_executor(
                 None,
@@ -274,20 +292,41 @@ class Voice:
     
     def status(self):
         """Print detailed voice status."""
-        if self.engine == 'elevenlabs' and self.subscription_info:
+        if self.engine == 'elevenlabs':
             info = self.subscription_info
-            console.print(Panel(
-                f"[cyan]Tier:[/cyan] {info.tier}\n"
-                f"[cyan]Characters used:[/cyan] {info.character_count:,} / {info.character_limit:,}\n"
-                f"[cyan]Remaining:[/cyan] {info.character_limit - info.character_count:,}\n"
-                f"[cyan]This session:[/cyan] {self.characters_used_session:,} chars\n"
-                f"[cyan]Voice settings:[/cyan]\n"
-                f"  Speed: {self.speed}x\n"
-                f"  Stability: {self.stability}\n"
-                f"  Similarity: {self.similarity_boost}\n"
-                f"  Style: {self.style}",
-                title="ElevenLabs Status"
-            ))
+            
+            # Extract info based on SDK response structure
+            if info:
+                if hasattr(info, 'subscription'):
+                    sub = info.subscription
+                    used = getattr(sub, 'character_count', 0)
+                    limit = getattr(sub, 'character_limit', 10000)
+                    tier = getattr(sub, 'tier', 'unknown')
+                else:
+                    used = getattr(info, 'character_count', 0)
+                    limit = getattr(info, 'character_limit', 10000)
+                    tier = getattr(info, 'tier', 'unknown')
+                
+                console.print(Panel(
+                    f"[cyan]Tier:[/cyan] {tier}\n"
+                    f"[cyan]Characters used:[/cyan] {used:,} / {limit:,}\n"
+                    f"[cyan]Remaining:[/cyan] {limit - used:,}\n"
+                    f"[cyan]This session:[/cyan] {self.characters_used_session:,} chars\n"
+                    f"[cyan]Voice settings:[/cyan]\n"
+                    f"  Stability: {self.stability}\n"
+                    f"  Similarity: {self.similarity_boost}\n"
+                    f"  Style: {self.style}",
+                    title="ElevenLabs Status"
+                ))
+            else:
+                console.print(Panel(
+                    f"[cyan]This session:[/cyan] {self.characters_used_session:,} chars\n"
+                    f"[cyan]Voice settings:[/cyan]\n"
+                    f"  Stability: {self.stability}\n"
+                    f"  Similarity: {self.similarity_boost}\n"
+                    f"  Style: {self.style}",
+                    title="ElevenLabs Status"
+                ))
         else:
             console.print(f"[dim]Engine: {self.engine}[/dim]")
     
