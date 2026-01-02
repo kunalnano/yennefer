@@ -10,7 +10,7 @@ import asyncio
 from rich.console import Console
 from rich.panel import Panel
 
-from .orchestrator import JarvisOrchestrator
+from .orchestrator import YenneferOrchestrator
 from .config import load_config
 
 console = Console()
@@ -26,8 +26,8 @@ def print_banner():
    ██║   ███████╗██║ ╚████║██║ ╚████║███████╗██║     ███████╗██║  ██║
    ╚═╝   ╚══════╝╚═╝  ╚═══╝╚═╝  ╚═══╝╚══════╝╚═╝     ╚══════╝╚═╝  ╚═╝
     """
-    console.print(Panel(banner, title="[bold magenta]AI Assistant[/bold magenta]", 
-                        subtitle="v0.1.0 - Windows + LM Studio + ElevenLabs", style="magenta"))
+    console.print(Panel(banner, title="[bold magenta]Yennefer AI[/bold magenta]", 
+                        subtitle="v0.3.0 - Voice Tuning + Credits", style="magenta"))
 
 
 async def main():
@@ -37,7 +37,7 @@ async def main():
     config = load_config()
     console.print("[green]✓[/green] Configuration loaded")
     
-    yennefer = JarvisOrchestrator(config)
+    yennefer = YenneferOrchestrator(config)
     await yennefer.run()
 
 

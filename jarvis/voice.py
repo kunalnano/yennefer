@@ -14,16 +14,38 @@ import sys
 import tempfile
 from pathlib import Path
 from rich.console import Console
+from rich.panel import Panel
 
 console = Console()
 
 
 def clean_for_speech(text: str) -> str:
-    """Remove markdown formatting that TTS would read literally."""
-    text = re.sub(r'\*+', '', text)
+    """Remove thinking tags and markdown formatting that TTS would read literally."""
+    # Strip complete thinking blocks
+    text = re.sub(r'<think>.*?</think>', '', text, flags=re.DOTALL)
+    text = re.sub(r'<thinking>.*?</thinking>', '', text, flags=re.DOTALL)
+    # Handle missing opening tag - strip everything before closing tag
+    if '</think>' in text:
+        text = text.split('</think>', 1)[-1]
+    if '</thinking>' in text:
+        text = text.split('</thinking>', 1)[-1]
+    # Handle unclosed tags
+    if '<think>' in text:
+        text = text.split('<think>', 1)[0]
+    if '<thinking>' in text:
+        text = text.split('<thinking>', 1)[0]
+    # Clean up orphan tags
+    text = re.sub(r'</?think(?:ing)?>', '', text)
+    # Strip markdown
+    text = re.sub(r'\*\*([^*]+)\*\*', r'\1', text)  # Bold
+    text = re.sub(r'\*([^*]+)\*', r'\1', text)  # Italic
     text = re.sub(r'_+', '', text)
     text = re.sub(r'`+', '', text)
-    text = re.sub(r'^#+\s*', '', text, flags=re.MULTILINE)
+    text = re.sub(r'^#+\s*', '', text, flags=re.MULTILINE)  # Headers
+    text = re.sub(r'^\s*[-*]\s+', '', text, flags=re.MULTILINE)  # Bullets
+    text = re.sub(r'^\s*\d+\.\s+', '', text, flags=re.MULTILINE)  # Numbered lists
+    text = re.sub(r'\n{2,}', '. ', text)  # Multiple newlines to pause
+    text = re.sub(r'\n', ' ', text)  # Single newlines to space
     text = re.sub(r'  +', ' ', text)
     return text.strip()
 
@@ -37,8 +59,15 @@ class Voice:
         
         # ElevenLabs settings
         self.voice_id = self.config.get('voice_id', '')
-        self.model = self.config.get('model', 'eleven_monolingual_v1')
+        self.model = self.config.get('model', 'eleven_turbo_v2_5')
         self.api_key = self.config.get('api_key') or os.environ.get('ELEVENLABS_API_KEY')
+        
+        # Voice tuning parameters
+        self.stability = self.config.get('stability', 0.5)  # 0-1, higher = more consistent
+        self.similarity_boost = self.config.get('similarity_boost', 0.75)  # 0-1, voice matching
+        self.style = self.config.get('style', 0.0)  # 0-1, style exaggeration
+        self.speed = self.config.get('speed', 1.0)  # 0.25-4.0, speech rate
+        self.use_speaker_boost = self.config.get('use_speaker_boost', True)
         
         # macOS settings
         self.macos_voice = self.config.get('macos_voice', 'Samantha')
@@ -48,6 +77,10 @@ class Voice:
         self._pygame_initialized = False
         self.client = None
         
+        # Usage tracking
+        self.characters_used_session = 0
+        self.subscription_info = None
+        
     async def initialize(self):
         """Initialize TTS engine."""
         # Auto-detect engine if voice_id is set
@@ -55,15 +88,12 @@ class Voice:
             self.engine = 'elevenlabs'
         elif sys.platform == 'darwin' and self.config.get('engine') == 'macos':
             self.engine = 'macos'
-        elif self.voice_id and self.api_key:
-            self.engine = 'elevenlabs'
         
         if self.engine == 'elevenlabs':
             await self._init_elevenlabs()
         elif self.engine == 'macos':
             await self._init_macos()
         else:
-            # Default to ElevenLabs if configured
             if self.api_key and self.voice_id:
                 await self._init_elevenlabs()
             elif sys.platform == 'darwin':
@@ -90,13 +120,60 @@ class Voice:
             
             self.initialized = True
             self.engine = 'elevenlabs'
-            console.print(f"[green]✓[/green] ElevenLabs ready (voice: {self.voice_id})")
+            
+            # Fetch and display subscription info
+            await self._fetch_subscription_info()
+            
+            console.print(f"[green]✓[/green] ElevenLabs ready (voice: {self.voice_id[:8]}..., speed: {self.speed}x)")
             
         except ImportError as e:
             console.print(f"[red]✗[/red] Missing package: {e}")
             console.print("[dim]Run: pip install elevenlabs pygame[/dim]")
         except Exception as e:
             console.print(f"[red]✗[/red] ElevenLabs error: {e}")
+    
+    async def _fetch_subscription_info(self):
+        """Fetch ElevenLabs subscription/usage info."""
+        try:
+            loop = asyncio.get_event_loop()
+            self.subscription_info = await loop.run_in_executor(
+                None,
+                lambda: self.client.user.get_subscription()
+            )
+            self._print_credits_status()
+        except Exception as e:
+            console.print(f"[yellow]Could not fetch subscription info: {e}[/yellow]")
+    
+    def _print_credits_status(self):
+        """Display ElevenLabs credits/usage."""
+        if not self.subscription_info:
+            return
+        
+        info = self.subscription_info
+        used = info.character_count
+        limit = info.character_limit
+        remaining = limit - used
+        percent_used = (used / limit) * 100 if limit > 0 else 0
+        
+        # Visual bar
+        bar_width = 25
+        filled = int((percent_used / 100) * bar_width)
+        bar = "█" * filled + "░" * (bar_width - filled)
+        
+        # Color based on usage
+        if percent_used < 50:
+            color = "green"
+        elif percent_used < 80:
+            color = "yellow"
+        else:
+            color = "red"
+        
+        tier = info.tier or "unknown"
+        
+        console.print(
+            f"[dim]ElevenLabs:[/dim] [{color}]{bar}[/{color}] "
+            f"[dim]{used:,}/{limit:,} chars ({percent_used:.1f}%) • {remaining:,} remaining • {tier}[/dim]"
+        )
     
     async def _init_macos(self):
         """Initialize macOS native TTS."""
@@ -127,18 +204,39 @@ class Voice:
             await self._speak_macos(speech_text)
     
     async def _speak_elevenlabs(self, text: str):
-        """Speak using ElevenLabs."""
+        """Speak using ElevenLabs with voice settings."""
         try:
             import pygame
+            from elevenlabs import VoiceSettings
+            
+            # Track character usage
+            self.characters_used_session += len(text)
+            
+            # Build voice settings
+            voice_settings = VoiceSettings(
+                stability=self.stability,
+                similarity_boost=self.similarity_boost,
+                style=self.style,
+                use_speaker_boost=self.use_speaker_boost
+            )
             
             loop = asyncio.get_event_loop()
+            
+            # Build kwargs - speed only supported on some models
+            kwargs = {
+                'text': text,
+                'voice_id': self.voice_id,
+                'model_id': self.model,
+                'voice_settings': voice_settings
+            }
+            
+            # Add speed if not default (some models/tiers may not support it)
+            if self.speed != 1.0:
+                kwargs['speed'] = self.speed
+            
             audio_generator = await loop.run_in_executor(
                 None,
-                lambda: self.client.text_to_speech.convert(
-                    text=text,
-                    voice_id=self.voice_id,
-                    model_id=self.model
-                )
+                lambda: self.client.text_to_speech.convert(**kwargs)
             )
             
             audio_bytes = b''.join(audio_generator)
@@ -173,6 +271,30 @@ class Voice:
             
         except Exception as e:
             console.print(f"[yellow]TTS error: {e}[/yellow]")
+    
+    def status(self):
+        """Print detailed voice status."""
+        if self.engine == 'elevenlabs' and self.subscription_info:
+            info = self.subscription_info
+            console.print(Panel(
+                f"[cyan]Tier:[/cyan] {info.tier}\n"
+                f"[cyan]Characters used:[/cyan] {info.character_count:,} / {info.character_limit:,}\n"
+                f"[cyan]Remaining:[/cyan] {info.character_limit - info.character_count:,}\n"
+                f"[cyan]This session:[/cyan] {self.characters_used_session:,} chars\n"
+                f"[cyan]Voice settings:[/cyan]\n"
+                f"  Speed: {self.speed}x\n"
+                f"  Stability: {self.stability}\n"
+                f"  Similarity: {self.similarity_boost}\n"
+                f"  Style: {self.style}",
+                title="ElevenLabs Status"
+            ))
+        else:
+            console.print(f"[dim]Engine: {self.engine}[/dim]")
+    
+    async def refresh_credits(self):
+        """Refresh ElevenLabs credit info."""
+        if self.engine == 'elevenlabs':
+            await self._fetch_subscription_info()
     
     def stop(self):
         """Stop current speech."""

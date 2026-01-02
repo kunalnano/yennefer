@@ -3,6 +3,7 @@ Brain - LLM Integration Module (LM Studio)
 """
 
 import os
+import re
 from typing import Any, Dict, List
 
 import httpx
@@ -43,6 +44,35 @@ Respond as if speaking aloud. No formatting."""
 def estimate_tokens(text: str) -> int:
     """Rough token estimate: ~4 chars per token for English."""
     return len(text) // 4
+
+
+def strip_thinking(text: str) -> str:
+    """Remove <think>...</think> blocks from reasoning model output.
+    
+    Handles multiple edge cases:
+    - Complete <think>...</think> blocks
+    - <thinking>...</thinking> variant  
+    - Missing opening tag (strip everything before </think>)
+    - Unclosed tags (strip from <think> to end)
+    - Orphan tags
+    """
+    # Strip complete thinking blocks (standard format)
+    text = re.sub(r'<think>.*?</think>', '', text, flags=re.DOTALL)
+    # Strip <thinking>...</thinking> variant
+    text = re.sub(r'<thinking>.*?</thinking>', '', text, flags=re.DOTALL)
+    # Handle missing opening tag - strip everything before closing tag
+    if '</think>' in text:
+        text = text.split('</think>', 1)[-1]
+    if '</thinking>' in text:
+        text = text.split('</thinking>', 1)[-1]
+    # Handle unclosed tags (model cut off mid-thought)
+    if '<think>' in text:
+        text = text.split('<think>', 1)[0]
+    if '<thinking>' in text:
+        text = text.split('<thinking>', 1)[0]
+    # Clean up any orphan tags
+    text = re.sub(r'</?think(?:ing)?>', '', text)
+    return text.strip()
 
 
 class Brain:
@@ -171,14 +201,17 @@ class Brain:
                     raise Exception(f"API error: {response.text}")
                 
                 data = response.json()
-                text = data['choices'][0]['message']['content']
+                raw_text = data['choices'][0]['message']['content']
+                
+                # Strip thinking tags from reasoning models (Nemotron, Qwen3, DeepSeek-R1, etc.)
+                text = strip_thinking(raw_text)
                 
                 # Get actual token usage if API provides it
                 usage = data.get('usage', {})
                 if usage:
                     self.total_tokens_used = usage.get('total_tokens', 0)
                 
-                # Add to history
+                # Add CLEANED response to history (no thinking tokens wasting context)
                 self.conversation_history.append({
                     'role': 'assistant',
                     'content': text

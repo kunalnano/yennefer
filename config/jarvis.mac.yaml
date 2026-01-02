@@ -7,13 +7,13 @@ voice_input:
 # Voice Output Settings (ElevenLabs)
 voice_output:
   voice_id: QPYZDsvgGiT4CMQghb53
-  model: eleven_monolingual_v1
-  api_key: ***REMOVED***
+  model: eleven_turbo_v2_5          # Free tier compatible model
+  api_key: YOUR_API_KEY_HERE        # Your ElevenLabs API key
 
 # LLM Backend Settings - Points to Windows machine
 llm:
   backend: lmstudio
-  api_base: "http://192.168.4.24:1234/v1"
+  api_base: "http://192.168.4.24:1234/v1"   # Your Windows IP
   model: auto
   max_tokens: 2048
   temperature: 0.7

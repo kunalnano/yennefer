@@ -12,8 +12,8 @@ from .brain import Brain
 console = Console()
 
 
-class JarvisOrchestrator:
-    """Main orchestrator for Yennefer."""
+class YenneferOrchestrator:
+    """Main orchestrator for Yennefer AI Assistant."""
     
     def __init__(self, config: dict):
         self.config = config
@@ -38,7 +38,12 @@ class JarvisOrchestrator:
         
         await self.voice.speak("I'm here. What do you need?")
         
-        console.print("\n[dim]Commands: 'quit' to exit | 'clear' to reset memory | 'status' for token usage[/dim]")
+        console.print("\n[dim]Commands:[/dim]")
+        console.print("[dim]  'quit'    - exit[/dim]")
+        console.print("[dim]  'clear'   - reset conversation memory[/dim]")
+        console.print("[dim]  'status'  - show LLM token usage[/dim]")
+        console.print("[dim]  'credits' - show ElevenLabs usage[/dim]")
+        console.print("[dim]  'voice'   - show voice settings[/dim]")
         console.print("[dim]Voice input: Press Win+H to dictate[/dim]\n")
         
         try:
@@ -61,6 +66,14 @@ class JarvisOrchestrator:
                     self.brain.status()
                     continue
                 
+                if cmd in ('credits', 'usage'):
+                    await self.voice.refresh_credits()
+                    continue
+                
+                if cmd == 'voice':
+                    self.voice.status()
+                    continue
+                
                 if not user_input:
                     continue
                 
@@ -80,3 +93,7 @@ class JarvisOrchestrator:
         await self.voice.speak("Until next time.")
         self.ears.cleanup()
         self.voice.cleanup()
+
+
+# Backwards compatibility alias
+JarvisOrchestrator = YenneferOrchestrator

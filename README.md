@@ -4,7 +4,7 @@ A sharp, intelligent AI assistant inspired by Yennefer of Vengerberg. Powered by
 
 ## Features
 
-- 🧠 **Local LLM** - Runs on LM Studio (Qwen3, Llama, Mistral, etc.)
+- 🧠 **Local LLM** - Runs on LM Studio (Nemotron, Qwen3, Llama, etc.)
 - 🎭 **Premium Voice** - ElevenLabs neural TTS with custom voice
 - 💬 **Personality** - Confident, witty, doesn't suffer fools
 - 📊 **Token Tracking** - Real-time context usage display
@@ -22,7 +22,7 @@ Voice Input (Win+H / Wispr Flow) → Local LLM → ElevenLabs TTS
 
 ### Windows (Native)
 
-1. **Install LM Studio** and load a model (recommended: Qwen3 30B-A3B)
+1. **Install LM Studio** and load a model (recommended: Nemotron-3-Nano-30B-A3B)
 2. **Start LM Studio server** (Local Server tab → Start)
 3. **Run setup:**
    ```powershell
@@ -32,7 +32,7 @@ Voice Input (Win+H / Wispr Flow) → Local LLM → ElevenLabs TTS
 4. **Add your ElevenLabs API key** to `config/jarvis.yaml`
 5. **Launch:**
    ```powershell
-   .\start_jarvis.bat
+   .\start_yennefer.bat
    ```
 
 ### Mac (Remote to Windows LM Studio)
@@ -49,7 +49,7 @@ Voice Input (Win+H / Wispr Flow) → Local LLM → ElevenLabs TTS
 4. **Edit config:** Set `api_base` to your Windows IP
 5. **Launch:**
    ```bash
-   python -m jarvis.main
+   ./start_yennefer.sh
    ```
 
 ## Configuration
@@ -58,6 +58,7 @@ Voice Input (Win+H / Wispr Flow) → Local LLM → ElevenLabs TTS
 ```yaml
 voice_output:
   voice_id: YOUR_ELEVENLABS_VOICE_ID
+  model: eleven_turbo_v2_5
   api_key: YOUR_ELEVENLABS_API_KEY
 
 llm:
@@ -70,6 +71,7 @@ llm:
 ```yaml
 voice_output:
   voice_id: YOUR_ELEVENLABS_VOICE_ID
+  model: eleven_turbo_v2_5
   api_key: YOUR_ELEVENLABS_API_KEY
 
 llm:
@@ -84,6 +86,7 @@ llm:
 - Sign up at https://elevenlabs.io
 - Create a custom voice or use stock voices
 - Free tier: 10k characters/month (~$5/mo for more)
+- **Model:** Use `eleven_turbo_v2_5` (free tier compatible)
 
 ### Mac Native (Free fallback)
 Set in config:
@@ -101,10 +104,18 @@ voice_output:
 | `clear` | Reset conversation memory |
 | `quit` | Exit |
 
+## Recommended Models
+
+| Model | VRAM | Best For |
+|-------|------|----------|
+| Nemotron-3-Nano-30B-A3B | ~18GB | Best reasoning/VRAM ratio |
+| Qwen3-30B-A3B | ~18GB | Good all-around |
+| GPT-OSS-20B | ~12GB | OpenAI's open model |
+
 ## LM Studio Setup
 
 1. Download from https://lmstudio.ai
-2. Load a model (recommended: `Qwen3 30B-A3B` for 16GB VRAM)
+2. Load a model (recommended: `nvidia/nemotron-3-nano` for quality)
 3. Go to **Local Server** tab
 4. Click **Start Server**
 5. For Mac access: Enable **Serve on Local Network**
@@ -113,7 +124,7 @@ voice_output:
 
 ```
 yennefer/
-├── jarvis/
+├── jarvis/              # Python module (legacy name)
 │   ├── __init__.py
 │   ├── main.py          # Entry point
 │   ├── orchestrator.py  # Main loop
@@ -127,8 +138,9 @@ yennefer/
 │   └── jarvis.mac.yaml
 ├── requirements.txt     # Windows deps
 ├── requirements-mac.txt # Mac deps
-├── setup.bat           # Windows setup
-├── start_jarvis.bat    # Windows launcher
+├── setup.bat            # Windows setup
+├── start_yennefer.bat   # Windows launcher
+├── start_yennefer.sh    # Mac launcher
 └── README.md
 ```
 

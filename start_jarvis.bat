@@ -1,5 +1,3 @@
 @echo off
-cd /d "%~dp0"
-call .venv\Scripts\activate
-python -m jarvis.main
-pause
+REM Legacy launcher - redirects to start_yennefer.bat
+call "%~dp0start_yennefer.bat"
