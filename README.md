@@ -8,139 +8,158 @@ A sharp, intelligent AI assistant inspired by Yennefer of Vengerberg. Powered by
 - 🎭 **Premium Voice** - ElevenLabs neural TTS with custom voice
 - 💬 **Personality** - Confident, witty, doesn't suffer fools
 - 📊 **Token Tracking** - Real-time context usage display
+- 💳 **Credit Tracking** - ElevenLabs usage monitoring
 - 🖥️ **Cross-Platform** - Windows native or Mac → Windows remote
-
-## Architecture
-
-```
-Voice Input (Win+H / Wispr Flow) → Local LLM → ElevenLabs TTS
-                                      ↓
-                          Sharp AI advisor responses
-```
 
 ## Quick Start
 
-### Windows (Native)
+### 1. Prerequisites
 
-1. **Install LM Studio** and load a model (recommended: Nemotron-3-Nano-30B-A3B)
-2. **Start LM Studio server** (Local Server tab → Start)
-3. **Run setup:**
-   ```powershell
-   cd C:\path\to\yennefer
-   .\setup.bat
-   ```
-4. **Add your ElevenLabs API key** to `config/jarvis.yaml`
-5. **Launch:**
-   ```powershell
-   .\start_yennefer.bat
-   ```
+- **LM Studio** - Download from https://lmstudio.ai
+- **ElevenLabs account** - Sign up at https://elevenlabs.io (free tier available)
+- **Python 3.10+**
 
-### Mac (Remote to Windows LM Studio)
+### 2. Clone and Setup
 
-1. **On Windows:** Enable "Serve on Local Network" in LM Studio
-2. **Get Windows IP:** Run `ipconfig` on Windows
-3. **On Mac:**
-   ```bash
-   cd ~/Projects/yennefer
-   python3 -m venv .venv
-   source .venv/bin/activate
-   pip install -r requirements-mac.txt
-   ```
-4. **Edit config:** Set `api_base` to your Windows IP
-5. **Launch:**
-   ```bash
-   ./start_yennefer.sh
-   ```
+```bash
+git clone https://github.com/kunalnano/yennefer.git
+cd yennefer
+
+# Windows
+.\setup.bat
+
+# Mac/Linux
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+### 3. Configure API Keys
+
+Copy the example environment file and add your keys:
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` with your credentials:
+```bash
+ELEVENLABS_API_KEY=your_api_key_here
+ELEVENLABS_VOICE_ID=your_voice_id_here
+```
+
+**Get your ElevenLabs API key:** https://elevenlabs.io/app/settings/api-keys
+
+**Get your Voice ID:** Go to Voices → click your voice → copy the Voice ID from the URL or settings
+
+### 4. Start LM Studio
+
+1. Open LM Studio
+2. Load a model (recommended: `nvidia/nemotron-3-nano-30b-a3b`)
+3. Go to **Local Server** tab → **Start Server**
+
+### 5. Launch Yennefer
+
+```bash
+# Windows
+.\start_yennefer.bat
+
+# Mac/Linux
+./start_yennefer.sh
+```
 
 ## Configuration
 
-### Windows (`config/jarvis.yaml`)
+The main config file is `config/jarvis.yaml`. API keys are loaded from environment variables (`.env` file).
+
+### Voice Settings
+
 ```yaml
 voice_output:
-  voice_id: YOUR_ELEVENLABS_VOICE_ID
-  model: eleven_turbo_v2_5
-  api_key: YOUR_ELEVENLABS_API_KEY
-
-llm:
-  backend: lmstudio
-  api_base: "http://localhost:1234/v1"
-  context_limit: 32000
+  voice_id: ${ELEVENLABS_VOICE_ID}    # From .env
+  api_key: ${ELEVENLABS_API_KEY}       # From .env
+  model: eleven_turbo_v2_5             # Fast model (free tier compatible)
+  
+  # Voice tuning
+  stability: 0.6          # 0-1: Higher = more consistent pitch
+  similarity_boost: 0.75  # 0-1: Voice matching accuracy
+  style: 0.0              # 0-1: Style exaggeration
+  speed: 1.15             # 0.25-4.0: Speech rate
 ```
 
-### Mac (`config/jarvis.yaml`)
-```yaml
-voice_output:
-  voice_id: YOUR_ELEVENLABS_VOICE_ID
-  model: eleven_turbo_v2_5
-  api_key: YOUR_ELEVENLABS_API_KEY
+### LLM Settings
 
+```yaml
 llm:
   backend: lmstudio
-  api_base: "http://192.168.x.x:1234/v1"  # Windows IP
+  api_base: "http://localhost:1234/v1"  # Or remote IP for Mac
+  model: auto
+  max_tokens: 2048
+  temperature: 0.7
   context_limit: 32000
-```
-
-## Voice Options
-
-### ElevenLabs (Recommended)
-- Sign up at https://elevenlabs.io
-- Create a custom voice or use stock voices
-- Free tier: 10k characters/month (~$5/mo for more)
-- **Model:** Use `eleven_turbo_v2_5` (free tier compatible)
-
-### Mac Native (Free fallback)
-Set in config:
-```yaml
-voice_output:
-  engine: macos
-  macos_voice: Samantha
 ```
 
 ## Commands
 
 | Command | Action |
 |---------|--------|
-| `status` | Show token usage |
+| `status` | Show LLM token usage |
+| `credits` | Show ElevenLabs character usage |
+| `voice` | Show voice settings |
 | `clear` | Reset conversation memory |
 | `quit` | Exit |
 
 ## Recommended Models
 
-| Model | VRAM | Best For |
-|-------|------|----------|
-| Nemotron-3-Nano-30B-A3B | ~18GB | Best reasoning/VRAM ratio |
+| Model | VRAM | Notes |
+|-------|------|-------|
+| Nemotron-3-Nano-30B-A3B | ~18GB | Best reasoning/VRAM ratio, uses `<think>` tags |
 | Qwen3-30B-A3B | ~18GB | Good all-around |
-| GPT-OSS-20B | ~12GB | OpenAI's open model |
+| GPT-OSS-120B | ~80GB | OpenAI's open model |
 
-## LM Studio Setup
+**Note:** Reasoning models that use `<think>...</think>` tags are automatically filtered—thinking isn't spoken aloud.
 
-1. Download from https://lmstudio.ai
-2. Load a model (recommended: `nvidia/nemotron-3-nano` for quality)
-3. Go to **Local Server** tab
-4. Click **Start Server**
-5. For Mac access: Enable **Serve on Local Network**
+## ElevenLabs Voice Options
+
+| Model | Speed | Quality | Free Tier |
+|-------|-------|---------|-----------|
+| `eleven_turbo_v2_5` | Fastest | Good | ✅ |
+| `eleven_flash_v2_5` | Fast | Good | ✅ |
+| `eleven_multilingual_v2` | Slower | Best | ✅ |
+
+Free tier includes 10,000 characters/month.
+
+## Mac → Windows Setup
+
+If running LM Studio on Windows and Yennefer on Mac:
+
+1. **Windows:** In LM Studio, enable "Serve on Local Network"
+2. **Windows:** Run `ipconfig` to get your IP (e.g., 192.168.1.100)
+3. **Mac:** Update `config/jarvis.yaml`:
+   ```yaml
+   llm:
+     api_base: "http://192.168.1.100:1234/v1"
+   ```
 
 ## Project Structure
 
 ```
 yennefer/
-├── jarvis/              # Python module (legacy name)
-│   ├── __init__.py
-│   ├── main.py          # Entry point
-│   ├── orchestrator.py  # Main loop
-│   ├── brain.py         # LLM integration
-│   ├── voice.py         # TTS output
-│   ├── ears.py          # Text input
-│   └── config.py        # Config loader
+├── jarvis/                 # Python module
+│   ├── main.py             # Entry point
+│   ├── orchestrator.py     # Main conversation loop
+│   ├── brain.py            # LLM integration
+│   ├── voice.py            # TTS output
+│   ├── ears.py             # Text input
+│   └── config.py           # Config loader with env var support
 ├── config/
-│   ├── jarvis.yaml      # Main config (gitignored)
-│   ├── jarvis.windows.yaml
-│   └── jarvis.mac.yaml
-├── requirements.txt     # Windows deps
-├── requirements-mac.txt # Mac deps
-├── setup.bat            # Windows setup
-├── start_yennefer.bat   # Windows launcher
-├── start_yennefer.sh    # Mac launcher
+│   └── jarvis.yaml         # Main config (uses ${ENV_VARS})
+├── .env.example            # Template for API keys
+├── .env                    # Your API keys (gitignored)
+├── requirements.txt
+├── start_yennefer.bat      # Windows launcher
+├── start_yennefer.sh       # Mac/Linux launcher
+├── CHANGELOG.md
 └── README.md
 ```
 
@@ -153,11 +172,32 @@ Yennefer is:
 - Helpful but never servile
 - An equal, not a servant
 
-Example:
 > **You:** I'm thinking of learning three programming languages at once.
 > 
-> **Yennefer:** I see. How... ambitious. You'll drown in syntax before you master any of them. Pick one. Learn it properly. Then, if you still have the will, consider the others.
+> **Yennefer:** How ambitious. You'll drown in syntax before you master any of them. Pick one. Learn it properly. Then consider the others.
+
+## Troubleshooting
+
+**"Cannot connect to LM Studio"**
+- Ensure LM Studio is running with a model loaded
+- Check the server is started (Local Server → Start)
+- Verify `api_base` URL matches your setup
+
+**"ElevenLabs 401 error"**
+- Check your API key in `.env`
+- Verify the key at https://elevenlabs.io/app/settings/api-keys
+
+**Voice sounds jarring/inconsistent**
+- Increase `stability` to 0.7 or 0.8 in config
+- Try a different ElevenLabs model
+
+**Thinking tags being spoken**
+- Update to v0.3.0+ which filters `<think>` blocks
 
 ## License
 
 MIT
+
+## Contributing
+
+PRs welcome! Please read [CHANGELOG.md](CHANGELOG.md) for version history.

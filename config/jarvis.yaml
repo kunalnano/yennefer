@@ -1,5 +1,4 @@
 # Yennefer Configuration - Windows with Local LM Studio + ElevenLabs TTS
-# Reference config - copy to jarvis.yaml and customize
 
 # Voice Input Settings
 voice_input:

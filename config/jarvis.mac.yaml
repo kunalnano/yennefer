@@ -1,19 +1,26 @@
-# Yennefer Configuration - Mac connecting to Windows LM Studio
+# Yennefer Configuration - Mac connecting to Windows LM Studio + ElevenLabs TTS
 
 # Voice Input Settings
 voice_input:
-  engine: text              # text input - use Wispr Flow for voice typing
+  engine: text              # text input - use voice typing app
 
 # Voice Output Settings (ElevenLabs)
 voice_output:
-  voice_id: QPYZDsvgGiT4CMQghb53
-  model: eleven_turbo_v2_5          # Free tier compatible model
-  api_key: YOUR_API_KEY_HERE        # Your ElevenLabs API key
+  voice_id: ${ELEVENLABS_VOICE_ID}    # Set via environment variable or .env file
+  model: eleven_turbo_v2_5            # eleven_turbo_v2_5 (fast), eleven_multilingual_v2 (quality)
+  api_key: ${ELEVENLABS_API_KEY}      # Set via environment variable or .env file
+  
+  # Voice tuning
+  stability: 0.6
+  similarity_boost: 0.75
+  style: 0.0
+  speed: 1.15
+  use_speaker_boost: true
 
-# LLM Backend Settings - Points to Windows machine
+# LLM Backend Settings - Point to Windows machine running LM Studio
 llm:
   backend: lmstudio
-  api_base: "http://192.168.4.24:1234/v1"   # Your Windows IP
+  api_base: "http://192.168.1.100:1234/v1"  # UPDATE: Your Windows IP address
   model: auto
   max_tokens: 2048
   temperature: 0.7

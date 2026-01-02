@@ -5,6 +5,22 @@ All notable changes to Yennefer AI Assistant will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2026-01-02
+
+### Added
+- **Environment variable support** - API keys now loaded from `.env` file
+- `.env.example` template for easy setup
+- `${VAR}` syntax expansion in YAML config
+
+### Changed
+- Removed hardcoded API keys from config files
+- Updated README with proper setup instructions for open source usage
+- All config files now use environment variable placeholders
+
+### Security
+- API keys no longer committed to repository
+- Added `.env` to `.gitignore`
+
 ## [0.3.0] - 2026-01-02
 
 ### Added

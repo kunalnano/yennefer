@@ -26,9 +26,6 @@ wheels/
 .installed.cfg
 *.egg
 
-# Config with secrets (use example files)
-config/jarvis.yaml
-
 # IDE
 .idea/
 .vscode/
@@ -49,6 +46,10 @@ Thumbs.db
 test*.mp3
 test*.wav
 
-# Environment variables
+# Environment variables (secrets)
 .env
 .env.local
+.env.production
+
+# Local config overrides (optional)
+config/jarvis.local.yaml
