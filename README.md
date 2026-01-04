@@ -15,6 +15,14 @@
 <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20Mac-6366F1?style=for-the-badge&logo=windows&logoColor=white&labelColor=1e1e2e" />
 <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-F97316?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=1e1e2e" /></a>
 
+<br>
+
+<!-- Dynamic GitHub Badges -->
+<img src="https://img.shields.io/github/last-commit/kunalnano/yennefer?style=flat-square&color=a855f7&label=Last%20Commit" />
+<img src="https://img.shields.io/github/stars/kunalnano/yennefer?style=flat-square&color=f97316&label=Stars" />
+<img src="https://img.shields.io/github/repo-size/kunalnano/yennefer?style=flat-square&color=00d084&label=Size" />
+<img src="https://img.shields.io/github/issues/kunalnano/yennefer?style=flat-square&color=6366f1&label=Issues" />
+
 <br><br>
 
 <!-- Quick Links with Icons -->
@@ -56,6 +64,27 @@ The only cloud touch is [ElevenLabs](https://elevenlabs.io) for premium neural T
 > 🎙️ Premium voice that doesn't sound like a robot
 > 
 > ⚡ Fast—runs on your GPU, not a queue
+
+---
+
+### ⚔️ Yennefer vs. The Cloud
+
+<div align="center">
+
+| | <img src="https://img.shields.io/badge/Yennefer-A855F7?style=flat-square" /> | <img src="https://img.shields.io/badge/ChatGPT-74AA9C?style=flat-square" /> | <img src="https://img.shields.io/badge/Claude_API-D97706?style=flat-square" /> | <img src="https://img.shields.io/badge/Alexa/Siri-1e1e2e?style=flat-square" /> |
+|:--|:--:|:--:|:--:|:--:|
+| **Privacy** | ✅ 100% Local | ❌ Cloud | ❌ Cloud | ❌ Cloud |
+| **Monthly Cost** | $0* | $20+ | $20+ | Free (with limits) |
+| **Rate Limits** | ∞ Unlimited | ⚠️ Throttled | ⚠️ Throttled | ⚠️ Throttled |
+| **Model Choice** | ✅ Any GGUF | ❌ GPT only | ❌ Claude only | ❌ Locked |
+| **Works Offline** | ✅ Yes | ❌ No | ❌ No | ❌ No |
+| **Custom Voice** | ✅ Clone yours | ❌ No | ❌ No | ❌ Limited |
+| **Personality** | 🎭 Unfiltered | 🤖 Corporate | 🤖 Corporate | 🤖 Corporate |
+| **Data Training** | ✅ Never | ⚠️ Maybe | ⚠️ Maybe | ⚠️ Likely |
+
+<sub>*Free except optional ElevenLabs voice (free tier: 10K chars/month)</sub>
+
+</div>
 
 <!-- Animated Divider -->
 <img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif">
