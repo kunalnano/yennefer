@@ -31,8 +31,6 @@
 
 ## 🎭 What Is This?
 
-<img align="right" width="300" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDB6OGd0NXRhOGRlNHNxbWd6MjN0OGR0Y2xnaTVhbmRwbXBnajZoYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LmNwrBhejkK9EFP504/giphy.gif" />
-
 Yennefer is a conversational AI that runs **entirely on your machine** using [LM Studio](https://lmstudio.ai). She's not another sycophantic assistant—she has opinions, standards, and won't coddle you.
 
 The only cloud touch is [ElevenLabs](https://elevenlabs.io) for premium neural TTS (optional—free tier gives you 10K chars/month).
@@ -58,8 +56,6 @@ The only cloud touch is [ElevenLabs](https://elevenlabs.io) for premium neural T
 > 🎙️ Premium voice that doesn't sound like a robot
 > 
 > ⚡ Fast—runs on your GPU, not a queue
-
-<br clear="right"/>
 
 <!-- Animated Divider -->
 <img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif">
@@ -92,8 +88,8 @@ The only cloud touch is [ElevenLabs](https://elevenlabs.io) for premium neural T
 
 | | Feature | Description |
 |:--:|:--------|:------------|
-| <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNnZhOXRiNDFjdThybWM4dGdtMG52YzNkYnRsMGx5OWdjZnUxZmd3ciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/gutZ5Pm6Xl62eIf5RZ/giphy.gif" width="30"> | **Local LLM** | Any GGUF model via LM Studio—Nemotron, Qwen, Llama, Mistral, DeepSeek |
-| <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ2VrZnRxYWRlcWRqMTVqbXE4Yjd1NTNqYjQ5c3RsM3cwbHQ2YTZsayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/lqPZLGWcXJAw8GJXp3/giphy.gif" width="30"> | **Premium Voice** | ElevenLabs neural TTS with custom voice cloning support |
+| 🧠 | **Local LLM** | Any GGUF model via LM Studio—Nemotron, Qwen, Llama, Mistral, DeepSeek |
+| 🎙️ | **Premium Voice** | ElevenLabs neural TTS with custom voice cloning support |
 | 🎭 | **Real Personality** | Sharp, confident, witty—inspired by Yennefer of Vengerberg |
 | 📊 | **Token Tracking** | Visual context window with auto-trim at 85% capacity |
 | 💳 | **Credits Monitor** | Real-time ElevenLabs character usage tracking |
