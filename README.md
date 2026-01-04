@@ -62,22 +62,89 @@ The only cloud touch is [ElevenLabs](https://elevenlabs.io) for premium neural T
 
 ## 🏗️ Architecture
 
+<div align="center">
+
+```mermaid
+flowchart LR
+    subgraph LOCAL ["  💻 YOUR MACHINE  "]
+        direction LR
+        A[" 👤 You "] -->|"⌨️ Input"| B[" ⚡ Yennefer\nOrchestrator "]
+        B -->|"💭 Query"| C[" 🧠 LM Studio\nLocal LLM "]
+        C -->|"💬 Response"| B
+    end
+    
+    B -->|"🔊 TTS Request"| D[" ☁️ ElevenLabs\nVoice API "]
+    D -->|"🎙️ Audio"| B
+    B -->|"🔈 Speech"| A
+
+    style LOCAL fill:#1e1e2e,stroke:#a855f7,stroke-width:2px,color:#ffffff
+    style A fill:#6366f1,stroke:#818cf8,color:#ffffff
+    style B fill:#a855f7,stroke:#c084fc,color:#ffffff
+    style C fill:#00d084,stroke:#34d399,color:#1e1e2e
+    style D fill:#f97316,stroke:#fb923c,color:#ffffff
+```
+
+<br>
+
+<table>
+<tr>
+<td align="center">
+<img src="https://img.shields.io/badge/You-6366F1?style=flat-square&logo=user&logoColor=white" /><br>
+<sub>Text or Voice Input</sub>
+</td>
+<td align="center">
+➡️
+</td>
+<td align="center">
+<img src="https://img.shields.io/badge/Yennefer-A855F7?style=flat-square&logo=bot&logoColor=white" /><br>
+<sub>Orchestrator</sub>
+</td>
+<td align="center">
+➡️
+</td>
+<td align="center">
+<img src="https://img.shields.io/badge/LM_Studio-00D084?style=flat-square&logo=ai&logoColor=white" /><br>
+<sub>Local LLM</sub>
+</td>
+</tr>
+</table>
+
+<br>
+
+<img src="https://img.shields.io/badge/↓_Only_External_Call_↓-1e1e2e?style=flat-square" />
+
+<br>
+
+<img src="https://img.shields.io/badge/ElevenLabs-F97316?style=for-the-badge&logo=audacity&logoColor=white" />
+<br>
+<sub>🌐 Cloud TTS • Optional • Free Tier Available</sub>
+
+</div>
+
+<br>
+
+<details>
+<summary><b>📜 View Text Diagram</b></summary>
+<br>
+
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                              YOUR MACHINE                                │
-│  ┌──────────┐      ┌─────────────────┐      ┌─────────────────────┐    │
-│  │   You    │─────▶│    Yennefer     │─────▶│     LM Studio       │    │
-│  │ keyboard │      │  (orchestrator) │      │  (local LLM engine) │    │
-│  └──────────┘      └────────┬────────┘      └─────────────────────┘    │
-│                             │                                           │
-└─────────────────────────────┼───────────────────────────────────────────┘
-                              │
-                              ▼
-                     ┌─────────────────┐
-                     │   ElevenLabs    │  ← Only external call
-                     │   (voice API)   │
-                     └─────────────────┘
+│                         💻  YOUR MACHINE                            │
+│  ┌──────────┐    ┌─────────────────┐    ┌─────────────────────┐  │
+│  │  👤 You   │───▶│  ⚡ Yennefer    │───▶│  🧠 LM Studio      │  │
+│  │ keyboard │    │  orchestrator  │    │  local LLM engine  │  │
+│  └──────────┘    └────────┬────────┘    └─────────────────────┘  │
+│                        │                                          │
+└────────────────────────┼────────────────────────────────────────────────┘
+                         │
+                         ▼
+                ┌─────────────────┐
+                │ ☁️ ElevenLabs  │  ← Only external call
+                │   voice API    │
+                └─────────────────┘
 ```
+
+</details>
 
 <!-- Animated Divider -->
 <img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif">
