@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.3.2] - 2026-01-03
 
+### Added
+- **Terminal demo mockup** - SVG screenshot showing Yennefer in action with ASCII banner, startup, and sample conversation
+- **"Yennefer vs. The Cloud" comparison table** - Side-by-side vs ChatGPT, Claude API, Alexa/Siri
+- **Dynamic GitHub badges** - Live last commit, stars, repo size, issues
+
 ### Changed
 - **README overhaul** - Full MySpace energy 🔮
   - Animated waving gradient header via capsule-render
@@ -14,11 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Animated purple dividers throughout
   - Skill icons for prerequisites section
   - Centered hero layout with for-the-badge style badges
-  - GIF integration (brain animation in features)
   - Collapsible troubleshooting with `<details>` tags
   - Three-column personality examples
   - Visual roadmap tables with status indicators
   - Animated footer with star counter
+- **Mermaid architecture diagram** - Color-coded flowchart with styled nodes replacing ASCII art
 - Added NVIDIA Nemotron-Mini-4B to recommended models
 - Remote setup now includes ASCII network diagram
 

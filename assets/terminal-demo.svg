@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="620" viewBox="0 0 800 620">
+  <defs>
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#1e1e2e"/>
+      <stop offset="100%" style="stop-color:#2d2d3f"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Terminal Window -->
+  <rect x="0" y="0" width="800" height="620" rx="12" ry="12" fill="#1e1e2e"/>
+  
+  <!-- Title Bar -->
+  <rect x="0" y="0" width="800" height="36" rx="12" ry="12" fill="url(#headerGrad)"/>
+  <rect x="0" y="24" width="800" height="12" fill="url(#headerGrad)"/>
+  
+  <!-- Traffic Lights -->
+  <circle cx="20" cy="18" r="6" fill="#ff5f56"/>
+  <circle cx="40" cy="18" r="6" fill="#ffbd2e"/>
+  <circle cx="60" cy="18" r="6" fill="#27ca40"/>
+  
+  <!-- Title -->
+  <text x="400" y="23" font-family="SF Mono, Consolas, monospace" font-size="13" fill="#888" text-anchor="middle">yennefer — python -m jarvis.main</text>
+  
+  <!-- Terminal Content -->
+  <text font-family="SF Mono, Consolas, monospace" font-size="12" fill="#cdd6f4">
+    <!-- ASCII Banner -->
+    <tspan x="20" y="70" fill="#a855f7">██╗   ██╗███████╗███╗   ██╗███╗   ██╗███████╗███████╗███████╗██████╗ </tspan>
+    <tspan x="20" y="88" fill="#a855f7">╚██╗ ██╔╝██╔════╝████╗  ██║████╗  ██║██╔════╝██╔════╝██╔════╝██╔══██╗</tspan>
+    <tspan x="20" y="106" fill="#a855f7"> ╚████╔╝ █████╗  ██╔██╗ ██║██╔██╗ ██║█████╗  █████╗  █████╗  ██████╔╝</tspan>
+    <tspan x="20" y="124" fill="#a855f7">  ╚██╔╝  ██╔══╝  ██║╚██╗██║██║╚██╗██║██╔══╝  ██╔══╝  ██╔══╝  ██╔══██╗</tspan>
+    <tspan x="20" y="142" fill="#a855f7">   ██║   ███████╗██║ ╚████║██║ ╚████║███████╗██║     ███████╗██║  ██║</tspan>
+    <tspan x="20" y="160" fill="#a855f7">   ╚═╝   ╚══════╝╚═╝  ╚═══╝╚═╝  ╚═══╝╚══════╝╚═╝     ╚══════╝╚═╝  ╚═╝</tspan>
+    
+    <!-- Status Messages -->
+    <tspan x="20" y="195" fill="#27ca40">✓</tspan><tspan x="35" y="195" fill="#888"> Configuration loaded</tspan>
+    <tspan x="20" y="213" fill="#27ca40">✓</tspan><tspan x="35" y="213" fill="#888"> LM Studio connected (nemotron-mini-4b)</tspan>
+    <tspan x="20" y="231" fill="#888">  Context: 32,000 tokens available</tspan>
+    <tspan x="20" y="249" fill="#27ca40">✓</tspan><tspan x="35" y="249" fill="#888"> ElevenLabs ready (voice: jEqL7VrZ..., speed: 1.15x)</tspan>
+    <tspan x="20" y="267" fill="#888">  ElevenLabs: ████████░░░░░░░░░░░░░ 3,847/10,000 chars (38.5%)</tspan>
+    
+    <!-- Yennefer speaks -->
+    <tspan x="20" y="302" fill="#a855f7">Yennefer:</tspan><tspan fill="#cdd6f4"> I'm here. What do you need?</tspan>
+    
+    <!-- Commands hint -->
+    <tspan x="20" y="337" fill="#555">Commands:</tspan>
+    <tspan x="20" y="355" fill="#555">  'quit'    - exit</tspan>
+    <tspan x="20" y="373" fill="#555">  'clear'   - reset conversation memory</tspan>
+    <tspan x="20" y="391" fill="#555">  'status'  - show LLM token usage</tspan>
+    <tspan x="20" y="409" fill="#555">  'credits' - show ElevenLabs usage</tspan>
+    
+    <!-- User Input -->
+    <tspan x="20" y="449" fill="#6366f1">You:</tspan><tspan fill="#cdd6f4"> I'm thinking about rewriting my app in Rust</tspan>
+    
+    <!-- Token bar -->
+    <tspan x="20" y="479" fill="#555">Tokens: </tspan><tspan fill="#27ca40">██</tspan><tspan fill="#3a3a4a">░░░░░░░░░░░░░░░░░░░░░░░░░░░░</tspan><tspan fill="#555"> 847/32,000 (2.6%) • ~158 min remaining</tspan>
+    
+    <!-- Yennefer Response -->
+    <tspan x="20" y="514" fill="#a855f7">Yennefer:</tspan><tspan fill="#cdd6f4"> How ambitious. Let me guess—you've written about</tspan>
+    <tspan x="20" y="532" fill="#cdd6f4">two hundred lines of Rust and now you're convinced it's the answer</tspan>
+    <tspan x="20" y="550" fill="#cdd6f4">to everything? Rewriting a working application is rarely the</tspan>
+    <tspan x="20" y="568" fill="#cdd6f4">solution. What's actually wrong with your current implementation?</tspan>
+    
+    <!-- Cursor -->
+    <tspan x="20" y="603" fill="#6366f1">You:</tspan><tspan fill="#cdd6f4"> </tspan><tspan fill="#a855f7">▌</tspan>
+  </text>
+</svg>

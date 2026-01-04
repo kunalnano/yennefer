@@ -67,6 +67,18 @@ The only cloud touch is [ElevenLabs](https://elevenlabs.io) for premium neural T
 
 ---
 
+### 🖥️ See It In Action
+
+<div align="center">
+
+<img src="assets/terminal-demo.svg" alt="Yennefer Terminal Demo" width="100%" />
+
+<sub>Yennefer roasting someone's Rust rewrite idea. As she does.</sub>
+
+</div>
+
+---
+
 ### ⚔️ Yennefer vs. The Cloud
 
 <div align="center">
