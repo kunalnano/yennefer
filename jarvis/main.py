@@ -6,6 +6,9 @@ Usage:
     python -m jarvis.main
 """
 
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'  # Must be before pygame import
+
 import asyncio
 from rich.console import Console
 from rich.panel import Panel
@@ -27,7 +30,7 @@ def print_banner():
    ╚═╝   ╚══════╝╚═╝  ╚═══╝╚═╝  ╚═══╝╚══════╝╚═╝     ╚══════╝╚═╝  ╚═╝
     """
     console.print(Panel(banner, title="[bold magenta]Yennefer AI[/bold magenta]", 
-                        subtitle="v0.3.1 - Open Source Ready", style="magenta"))
+                        subtitle="v0.3.2", style="magenta"))
 
 
 async def main():

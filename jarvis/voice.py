@@ -8,6 +8,7 @@ Supports:
 
 import asyncio
 import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'  # Suppress pygame welcome message
 import re
 import subprocess
 import sys

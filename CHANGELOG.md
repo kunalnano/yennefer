@@ -5,6 +5,18 @@ All notable changes to Yennefer AI Assistant will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.2] - 2026-01-03
+
+### Changed
+- **README overhaul** - Complete rewrite with visual hierarchy, centered hero section, for-the-badge style badges
+- Added two-column "Why local?" / "Why Yennefer?" feature comparison
+- Collapsible troubleshooting sections using `<details>` tags
+- Richer personality examples with table formatting
+- NVIDIA Nemotron-Mini-4B added to recommended models
+- More descriptive project structure documentation
+- Added call-to-action footer with star prompt
+- Expanded roadmap with clearer categorization (Coming Soon vs Future)
+
 ## [0.3.1] - 2026-01-02
 
 ### Added
