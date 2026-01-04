@@ -8,14 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.3.2] - 2026-01-03
 
 ### Changed
-- **README overhaul** - Complete rewrite with visual hierarchy, centered hero section, for-the-badge style badges
-- Added two-column "Why local?" / "Why Yennefer?" feature comparison
-- Collapsible troubleshooting sections using `<details>` tags
-- Richer personality examples with table formatting
-- NVIDIA Nemotron-Mini-4B added to recommended models
-- More descriptive project structure documentation
-- Added call-to-action footer with star prompt
-- Expanded roadmap with clearer categorization (Coming Soon vs Future)
+- **README overhaul** - Full MySpace energy 🔮
+  - Animated waving gradient header via capsule-render
+  - Typing SVG animation with rotating taglines
+  - Animated purple dividers throughout
+  - Skill icons for prerequisites section
+  - Centered hero layout with for-the-badge style badges
+  - GIF integration (brain animation in features)
+  - Collapsible troubleshooting with `<details>` tags
+  - Three-column personality examples
+  - Visual roadmap tables with status indicators
+  - Animated footer with star counter
+- Added NVIDIA Nemotron-Mini-4B to recommended models
+- Remote setup now includes ASCII network diagram
 
 ## [0.3.1] - 2026-01-02
 
